@@ -9,6 +9,7 @@ from scripts.entities import PhysicsEntity, Player, Enemy
 from scripts.tilemap import Tilemap
 from scripts.particle import Particle
 from scripts.spark import Spark
+from scripts.UI import TextUI, ImageUI
 
 class Game:
     def __init__(self):
