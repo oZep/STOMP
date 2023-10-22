@@ -51,10 +51,11 @@ class Game:
             '8': load_image('cards/8.png'),
             '9': load_image('cards/9.png'),
             #'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
-            'start_scene': load_image('start.png')
+            'start_scene': load_image('start.png'),
+            'mat_1': load_image('mat_1.png'),
         }
 
-        self.background = ['start_scene']  # add textUI to start scene
+        self.background = ['start_scene', 'mat_1']  # add textUI to start scene
         self.scene = 0
 
         # Chang this to switch between scenes
@@ -99,8 +100,8 @@ class Game:
             # clear the screen for new image generation in loop
             self.display_2.blit(self.assets[self.background[self.scene]], (0,0)) # increase self.scene when they win
             if not self.start:
-                start_instruction = TextUI("Press X to Start", (60, 215), 27, (255,255,255))
-                start_instruction.update()
+                start_instruction = TextUI("Press X to Start", pos=[60, 220], fontsize=27, color=(255,255,255), float=1)
+                start_instruction.update(self.clock.get_time())
                 start_instruction.render(self.display_2)
             else:
 

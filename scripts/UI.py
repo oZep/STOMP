@@ -1,6 +1,7 @@
 import pygame
 import math
 
+
 class ImageUI:
     def __init__(self, img, pos, size):
         '''
@@ -37,7 +38,7 @@ class ImageUI:
     
 
 class TextUI:
-    def __init__(self, text, pos=[0,0], fontsize=16, color=(0,0,0)):
+    def __init__(self, text, pos=[0,0], fontsize=16, color=(0,0,0), float=0):
         '''
         initializing the level counter
         (current level, position=[x,y], color)
@@ -46,9 +47,19 @@ class TextUI:
         self.pos = pos
         self.fontsize = fontsize
         self.color = color
+        self.float = float
+        self.x_offset = 0
 
-    def update(self):
-        pass
+
+    def update(self, dt):
+        # Initialize variables
+        if self.float:
+            amplitude = 30  # Amplitude of the sine wave
+            frequency = 2  # Frequency of the sine wave
+            self.x_offset += dt * 0.01
+            self.y = amplitude * math.sin(frequency * self.x_offset)
+        else:
+            self.y = 0
     
 
     def render(self, surf):
@@ -57,5 +68,5 @@ class TextUI:
         (surface, font size)
         '''
         current_level = pygame.font.SysFont('Return of Ganon', self.fontsize).render(f"{self.text}", False, self.color)
-        surf.blit(current_level, self.pos)
+        surf.blit(current_level, (self.pos[0], self.pos[1] + self.y))
 
