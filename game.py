@@ -7,7 +7,6 @@ import pygame
 from scripts.utils import load_image, load_images, Animation
 from scripts.entities import PhysicsEntity, Player, Enemy
 from scripts.tilemap import Tilemap
-from scripts.clouds import Clouds
 from scripts.particle import Particle
 from scripts.spark import Spark
 
@@ -21,11 +20,11 @@ class Game:
         # change the window caption
         pygame.display.set_caption("S T O M P")
         # create window
-        self.screen = pygame.display.set_mode((640,480))
+        self.screen = pygame.display.set_mode((520,520))
 
-        self.display = pygame.Surface((320, 240), pygame.SRCALPHA) # render on smaller resolution then scale it up to bigger screen
+        self.display = pygame.Surface((260, 260), pygame.SRCALPHA) # render on smaller resolution then scale it up to bigger screen
 
-        self.display_2 = pygame.Surface((320, 240))
+        self.display_2 = pygame.Surface((260, 260))
 
         self.clock = pygame.time.Clock()
 
@@ -40,14 +39,13 @@ class Game:
         # [20][21][22][23]   [Pass] [card7]... [card9]
         # ]
 
-        self.movement = [False, False]
-
         self.assets = {
-            'decor': load_images('tiles/decor'),
-            'grass': load_images('tiles/grass'),
-            'enemy/idle': Animation(load_images('entities/enemy/idle'), img_dur=6),
-            'enemy/run': Animation(load_images('entities/enemy/run'), img_dur=4),
-            'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
+            #'decor': load_images('tiles/decor'),
+            #'grass': load_images('tiles/grass'),
+            #'enemy/idle': Animation(load_images('entities/enemy/idle'), img_dur=6),
+            #'enemy/run': Animation(load_images('entities/enemy/run'), img_dur=4),
+            #'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
+            'background': load_image('background.png')
         }
 
         # adding sound
@@ -58,8 +56,6 @@ class Game:
         
 
         # initalizing player
-        self.player = Player(self, (100, 100), (8, 15))
-
 
         # Chang this to switch between scenes
         # tracking level
@@ -73,7 +69,7 @@ class Game:
 
 
     def load_level(self, map_id):
-        self.tilemap.load('data/maps/' + str(map_id) + '.json')
+        #self.tilemap.load('data/maps/' + str(map_id) + '.json')
 
         # keep track
         self.particles = []
@@ -94,12 +90,6 @@ class Game:
         '''
         runs the Game
         '''
-        #pygame.mixer.music.load('data/music.wav')
-        #pygame.mixer.music.set_volume(0.5)
-        #pygame.mixer.music.play(-1)
-
-        #self.sfx['ambience'].play(-1)
-
         # creating an infinite game loop
         while True:
             self.display.fill((0, 0, 0, 0))    # outlines
@@ -110,8 +100,8 @@ class Game:
 
             # move 'camera' to focus on player, make him the center of the screen
             # scroll = current scroll + (where we want the camera to be - what we have/can see currently) 
-            self.scroll[0] += (self.player.rect().centerx - self.display.get_width()/2 - self.scroll[0])  / 30  # x axis
-            self.scroll[1] += (self.player.rect().centery - self.display.get_height()/2 - self.scroll[1]) / 30
+            self.scroll[0] += (- self.scroll[0])  / 30  # x axis
+            self.scroll[1] += (- self.scroll[1]) / 30
 
             # fix the jitter
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
