@@ -40,22 +40,14 @@ class Game:
         # ]
 
         self.assets = {
-            #'decor': load_images('tiles/decor'),
-            #'grass': load_images('tiles/grass'),
-            #'enemy/idle': Animation(load_images('entities/enemy/idle'), img_dur=6),
-            #'enemy/run': Animation(load_images('entities/enemy/run'), img_dur=4),
+            'card_back': load_image('card_back.png'),
+            'cards': load_images('cards'),
             #'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
             'background': load_image('background.png')
         }
 
-        # adding sound
-        #self.sfx = {
-        #    'jump': pygame.mixer.Sound('data/sfx/jump.wav'),
-        #    'dash': pygame.mixer.Sound('data/sfx/dash.wav'),,
-        #}
-        
-
-        # initalizing player
+        self.background = []
+        self.scene = 0
 
         # Chang this to switch between scenes
         # tracking level
@@ -69,11 +61,6 @@ class Game:
 
 
     def load_level(self, map_id):
-        #self.tilemap.load('data/maps/' + str(map_id) + '.json')
-
-        # keep track
-        self.particles = []
-
         self.cards = Cards(self)
 
         # creating 'camera' 
@@ -81,11 +68,13 @@ class Game:
 
         self.dead = 0
 
-        self.projectiles = []
-        self.sparks = []
-
         # transition for levels
         self.transition = -30
+
+        # set the inital card to turnover
+        self.first_card = 0
+
+        self.turned_over = 0
 
 
     def run(self):
@@ -96,7 +85,7 @@ class Game:
         while True:
             self.display.fill((0, 0, 0, 0))    # outlines
             # clear the screen for new image generation in loop
-            self.display_2.blit(self.assets['background'], (0,0)) # no outline
+            self.display_2.blit(self.assets[str(self.background[self.scene])], (0,0)) # no outline
 
             self.screenshake = max(0, self.screenshake-1) # resets screenshake value
 
@@ -108,14 +97,26 @@ class Game:
             # fix the jitter
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
+
+            if not self.first_card:
+                self.cards.card_map[[2,2]].turnOver()
+                self.first_card = 1
+
             # turnover card if selected
             if self.selected:
                 self.cards.card_map[self.mouse].turnOver()
+                self.turned_over += 1
+
+
+            # update cards & flags
+            for card in self.cards.card_map.values():
+                card.update()
+                card.render()
 
 
             # ouline based on display
             display_mask = pygame.mask.from_surface(self.display)
-            display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) # 180 opaque, 0 transparent
+            display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) # 180 opaque, 0 transparen
             self.display_2.blit(display_sillhouette, (0, 0))
             for offset in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                 self.display_2.blit(display_sillhouette, offset) # putting what we drew onframe back into display

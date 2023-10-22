@@ -33,27 +33,34 @@ class Cards:
         # generate cards for games
         for i, n in range(len(CARDS)), CARD_MAP[0]:
             select = random.randint(0,len(self.unselected))
-            self.card_map[n] = Card(CARDS[select])
+            self.card_map[n] = Card(CARDS[select], self.game)
             self.unselected.pop(select)
+        
 
 class Card:
-    def __init__(self, value):
+    def __init__(self, value, game):
+        self.game = game
         self.value = value
         self.flag = 0
+        self.animation = self.game.assets['card_back'].copy()
+        self.type = 'card'
     
     def turnOver(self):
         self.flag = 1
 
-    def update():
-        pass
+    def update(self):
         # if clicked which cards will edit and send info
+
+        # show back of card
+        if self.flag:
+            self.animation = self.game.assets[self.type][self.value].copy() # get card asset and navigate to the value which is stored in the list
+
+
     
     def render(self, surf, offset={0,0}):
         '''
-        renders entitiy asset
+        renders card on the screen
         '''
-        # show back of card
-
         # show front of card on selected, if card value == 0, also send shocks 
-        surf.blit(pygame.transform.flip(self.animation.img(), self.flip, False), (self.pos[0] - offset[0] + self.anim_offset[0], self.pos[1] - offset[1] + self.anim_offset[1]))
+        surf.blit(self.animation.img(), (self.pos[0] - offset[0] + self.anim_offset[0], self.pos[1] - offset[1] + self.anim_offset[1]))
 
