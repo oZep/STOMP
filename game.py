@@ -28,7 +28,18 @@ class Game:
         self.display_2 = pygame.Surface((320, 240))
 
         self.clock = pygame.time.Clock()
-        
+
+
+        # keeping track of cards
+
+        self.mouse = [0,0]
+
+        # [
+        # [00][01][02][03] [XX] [card1]... [card3]
+        # [10][11][12][13] [Spray] [card4]... [card6]
+        # [20][21][22][23]   [Pass] [card7]... [card9]
+        # ]
+
         self.movement = [False, False]
 
         self.assets = {
@@ -120,18 +131,18 @@ class Game:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT: # referencing right and left arrow keys
-                        self.movement[0] = True
+                        self.mouse[1] = min(self.mouse - 1, 0)
                     if event.key == pygame.K_RIGHT: 
-                        self.movement[1] = True
+                        self.mouse[1] = max(self.mouse + 1, 3)
                     if event.key == pygame.K_UP: # jump!, dont care about it's release as I dont want a constant jump on hold
-                        pass
+                        self.mouse[0] = min(self.mouse - 1, 3)
+                    if event.key == pygame.K_DOWN:
+                        self.mouse[0] = min(self.mouse - 1, 3)
                     if event.key == pygame.K_x:
-                        self.player.dash()
+                        self.select = True
                 if event.type == pygame.KEYUP: # when key is released
-                    if event.key == pygame.K_LEFT: 
-                        self.movement[0] = False
-                    if event.key == pygame.K_RIGHT: 
-                        self.movement[1] = False
+                    if event.key == pygame.K_x:
+                        self.select = False
 
             # implementing transition
             if self.transition:
