@@ -5,11 +5,8 @@ import random
 import pygame
 
 from scripts.utils import load_image, load_images, Animation
-from scripts.entities import PhysicsEntity, Player, Enemy
-from scripts.tilemap import Tilemap
-from scripts.particle import Particle
-from scripts.spark import Spark
 from scripts.UI import TextUI, ImageUI
+from scripts.card import Cards, Card
 
 class Game:
     def __init__(self):
@@ -33,6 +30,8 @@ class Game:
         # keeping track of cards
 
         self.mouse = [0,0]
+
+        self.score = 0 # for cards turned over add the amount
 
         # [
         # [00][01][02][03] [XX] [card1]... [card3]
@@ -75,6 +74,8 @@ class Game:
         # keep track
         self.particles = []
 
+        self.cards = Cards(self)
+
         # creating 'camera' 
         self.scroll = [0, 0]
 
@@ -106,6 +107,10 @@ class Game:
 
             # fix the jitter
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
+
+            # turnover card if selected
+            if self.selected:
+                self.cards.card_map[self.mouse].turnOver()
 
 
             # ouline based on display
