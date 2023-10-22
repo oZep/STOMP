@@ -68,6 +68,7 @@ class Game:
         self.screenshake = 0
 
         self.selected = 0
+        self.start = 0
 
 
     def load_level(self, map_id):
@@ -96,43 +97,48 @@ class Game:
         while True:
             self.display.fill((0, 0, 0, 0))    # outlines
             # clear the screen for new image generation in loop
-            self.display_2.blit(self.assets[str(self.background[self.scene])], (0,0)) # no outline
+            self.display_2.blit(self.assets[self.background[self.scene]], (0,0)) # increase self.scene when they win
+            if not self.start:
+                start_instruction = TextUI("Press X to Start", (60, 215), 27, (255,255,255))
+                start_instruction.update()
+                start_instruction.render(self.display_2)
+            else:
 
-            self.screenshake = max(0, self.screenshake-1) # resets screenshake value
+                self.screenshake = max(0, self.screenshake-1) # resets screenshake value
 
-            # move 'camera' to focus on player, make him the center of the screen
-            # scroll = current scroll + (where we want the camera to be - what we have/can see currently) 
-            self.scroll[0] += (- self.scroll[0])  / 30  # x axis
-            self.scroll[1] += (- self.scroll[1]) / 30
+                # move 'camera' to focus on player, make him the center of the screen
+                # scroll = current scroll + (where we want the camera to be - what we have/can see currently) 
+                self.scroll[0] += (- self.scroll[0])  / 30  # x axis
+                self.scroll[1] += (- self.scroll[1]) / 30
 
-            # fix the jitter
-            render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
+                # fix the jitter
+                render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
-            
+                
 
-            if not self.first_card:
-                self.cards.card_map['[2, 2]'].turnOver()
-                self.first_card = 1
+                if not self.first_card:
+                    self.cards.card_map['[2, 2]'].turnOver()
+                    self.first_card = 1
 
-            # turnover card if selected
-            if self.selected:
-                self.cards.card_map[[self.mouse]].turnOver()
-                self.turned_over += 1
-
-
-            # update cards & flags
-            for card in self.cards.card_map.values():
-                card.update()
-                card.render(self.display)
+                # turnover card if selected
+                if self.selected:
+                    self.cards.card_map[[self.mouse]].turnOver()
+                    self.turned_over += 1
 
 
-            # ouline based on display
-            display_mask = pygame.mask.from_surface(self.display)
-            display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) # 180 opaque, 0 transparen
-            self.display_2.blit(display_sillhouette, (0, 0))
-            for offset in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                self.display_2.blit(display_sillhouette, offset) # putting what we drew onframe back into display
-            
+                # update cards & flags
+                for card in self.cards.card_map.values():
+                    card.update()
+                    card.render(self.display)
+
+
+                # ouline based on display
+                display_mask = pygame.mask.from_surface(self.display)
+                display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) # 180 opaque, 0 transparen
+                self.display_2.blit(display_sillhouette, (0, 0))
+                for offset in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    self.display_2.blit(display_sillhouette, offset) # putting what we drew onframe back into display
+                
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: # have to code the window closing
@@ -140,28 +146,31 @@ class Game:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT: # referencing right and left arrow keys
-                        self.mouse[1] = min(self.mouse - 1, 0)
+                        self.mouse[1] = min(self.mouse[1] - 1, 0)
                     if event.key == pygame.K_RIGHT: 
-                        self.mouse[1] = max(self.mouse + 1, 3)
+                        self.mouse[1] = max(self.mouse[1] + 1, 3)
                     if event.key == pygame.K_UP: # jump!, dont care about it's release as I dont want a constant jump on hold
-                        self.mouse[0] = min(self.mouse - 1, 3)
+                        self.mouse[0] = min(self.mouse[0] - 1, 3)
                     if event.key == pygame.K_DOWN:
-                        self.mouse[0] = min(self.mouse - 1, 3)
+                        self.mouse[0] = min(self.mouse[0] - 1, 3)
                     if event.key == pygame.K_x:
                         if not self.start:
                             self.start = 1
+                            self.scene = 1 # start the scene cyle off
                         else:
                             self.select = True
+                    if event.key == pygame.K_ESCAPE:
+                        self.start = 0
                 if event.type == pygame.KEYUP: # when key is released
                     if event.key == pygame.K_x:
                         self.select = False
 
             # implementing transition
-            if self.transition:
-                transition_surf = pygame.Surface(self.display.get_size())
-                pygame.draw.circle(transition_surf, (255, 255, 255), (self.display.get_width() // 2, self.display.get_height() // 2), (30 - abs(self.transition)) * 8) # display center of screen, 30 is the timer we chose, 30 * 8 = 180
-                transition_surf.set_colorkey((255, 255, 255)) # making the circle transparent now
-                self.display_2.blit(transition_surf, (0, 0))
+            #if self.transition:
+            #    transition_surf = pygame.Surface(self.display.get_size())
+            #    pygame.draw.circle(transition_surf, (255, 255, 255), (self.display.get_width() // 2, self.display.get_height() // 2), (30 - abs(self.transition)) * 8) # display center of screen, 30 is the timer we chose, 30 * 8 = 180
+            #    transition_surf.set_colorkey((255, 255, 255)) # making the circle transparent now
+            #    self.display_2.blit(transition_surf, (0, 0))
 
             self.display_2.blit(self.display, (0, 0)) # cast display 2 on display
 

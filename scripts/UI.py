@@ -46,6 +46,9 @@ class TextUI:
         self.pos = pos
         self.fontsize = fontsize
         self.color = color
+
+    def update(self):
+        pass
     
 
     def render(self, surf):

@@ -42,7 +42,6 @@ class Card:
         self.game = game
         self.value = value
         self.flag = 0
-        self.draw = self.game.assets['0'].copy()
         self.type = 0
     
     def turnOver(self):
@@ -52,16 +51,15 @@ class Card:
         # if clicked which cards will edit and send info
 
         # show back of card
-        if self.flag:
-            self.draw = self.game.assets[str(self.value)].copy() # get card asset and navigate to the value which is stored in the list
+        if self.flag == 1:
+            self.type = self.game.assets[str(self.value)].copy() # get card asset and navigate to the value which is stored in the list
 
 
     
-    def render(self, surf, offset={0,0}):
+    def render(self, surf, offset=[0,0]):
         '''
         renders card on the screen
         '''
-        print(self.draw, "\n")
         # show front of card on selected, if card value == 0, also send shocks 
-        surf.blit(self.draw, (offset[0], offset[1]))
+        surf.blit(self.game.assets['0'].copy(), (offset[0], offset[1]))
 
