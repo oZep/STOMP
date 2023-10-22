@@ -54,9 +54,9 @@ class TextUI:
     def update(self, dt):
         # Initialize variables
         if self.float:
-            amplitude = 30  # Amplitude of the sine wave
-            frequency = 2  # Frequency of the sine wave
-            self.x_offset += dt * 0.01
+            amplitude = 40  # Amplitude of the sine wave
+            frequency = 1  # Frequency of the sine wave
+            self.x_offset += dt * 0.001
             self.y = amplitude * math.sin(frequency * self.x_offset)
         else:
             self.y = 0

@@ -17,6 +17,9 @@ import random
         # [20][21][22][23]   [Pass] [card7]... [card9]
         # ]
 
+OFFSET_X = 50
+OFFSET_Y = -40
+
 CARDS = [0,2,3,4,5,6,7,8,9] # where zero refs bigfoot
 CARD_MAP = {
             '1': [0,1], '2': [0,2], '3': [0,3],   #[XX] [card1]... [card3]
@@ -33,16 +36,17 @@ class Cards:
         # generate cards for games
         for i in CARD_MAP.values():
             select = random.randint(0,len(self.unselected)-1)
-            self.card_map[str(i)] = Card(CARDS[select], self.game)
+            self.card_map[str(i)] = Card(CARDS[select], self.game, i)
             self.unselected.pop(select)
         
 
 class Card:
-    def __init__(self, value, game):
+    def __init__(self, value, game, position):
         self.game = game
         self.value = value
         self.flag = 0
         self.type = 0
+        self.pos = position
     
     def turnOver(self):
         self.flag = 1
@@ -61,5 +65,5 @@ class Card:
         renders card on the screen
         '''
         # show front of card on selected, if card value == 0, also send shocks 
-        surf.blit(self.game.assets['0'].copy(), (offset[0], offset[1]))
+        surf.blit(self.game.assets['0'].copy(), (self.pos[0] * surf.get_width()//4 + offset[0] + OFFSET_X, self.pos[1] * 70  + offset[1] + OFFSET_Y))
 
