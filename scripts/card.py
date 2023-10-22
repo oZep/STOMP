@@ -18,11 +18,11 @@ import random
         # ]
 
 CARDS = [0,2,3,4,5,6,7,8,9] # where zero refs bigfoot
-CARD_MAP = [
-            [0,0],[0,1],[0,2], [0,3],   #[XX] [card1]... [card3]
-            [1,0],[1,1],[1,2],[1,3],    #[Spray] [card4]... [card6]
-            [2,0],[2,1],[2,2],[2,3],    #[Pass] [card7]... [card9]
-           ]
+CARD_MAP = {
+            '1': [0,1], '2': [0,2], '3': [0,3],   #[XX] [card1]... [card3]
+            '4': [1,1], '5': [1,2], '6': [1,3],    #[Spray] [card4]... [card6]
+            '7': [2,1], '8': [2,2], '9': [2,3],    #[Pass] [card7]... [card9]
+        }
 
 class Cards:
     def __init__(self, game):
@@ -31,9 +31,9 @@ class Cards:
         self.unselected = list(CARDS)
         
         # generate cards for games
-        for i, n in range(len(CARDS)), CARD_MAP[0]:
-            select = random.randint(0,len(self.unselected))
-            self.card_map[n] = Card(CARDS[select], self.game)
+        for i in CARD_MAP.values():
+            select = random.randint(0,len(self.unselected)-1)
+            self.card_map[str(i)] = Card(CARDS[select], self.game)
             self.unselected.pop(select)
         
 
@@ -42,8 +42,8 @@ class Card:
         self.game = game
         self.value = value
         self.flag = 0
-        self.animation = self.game.assets['card_back'].copy()
-        self.type = 'card'
+        self.draw = self.game.assets['0'].copy()
+        self.type = 0
     
     def turnOver(self):
         self.flag = 1
@@ -53,7 +53,7 @@ class Card:
 
         # show back of card
         if self.flag:
-            self.animation = self.game.assets[self.type][self.value].copy() # get card asset and navigate to the value which is stored in the list
+            self.draw = self.game.assets[str(self.value)].copy() # get card asset and navigate to the value which is stored in the list
 
 
     
@@ -61,6 +61,7 @@ class Card:
         '''
         renders card on the screen
         '''
+        print(self.draw, "\n")
         # show front of card on selected, if card value == 0, also send shocks 
-        surf.blit(self.animation.img(), (self.pos[0] - offset[0] + self.anim_offset[0], self.pos[1] - offset[1] + self.anim_offset[1]))
+        surf.blit(self.draw, (offset[0], offset[1]))
 

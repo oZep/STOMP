@@ -40,13 +40,21 @@ class Game:
         # ]
 
         self.assets = {
-            'card_back': load_image('card_back.png'),
-            'cards': load_images('cards'),
+            '0': load_image('cards/0.png'),
+            '1': load_image('cards/1.png'),
+            '2': load_image('cards/2.png'),
+            '3': load_image('cards/3.png'),
+            '4': load_image('cards/4.png'),
+            '5': load_image('cards/5.png'),
+            '6': load_image('cards/6.png'),
+            '7': load_image('cards/7.png'),
+            '8': load_image('cards/8.png'),
+            '9': load_image('cards/9.png'),
             #'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
-            'background': load_image('background.png')
+            'start_scene': load_image('start.png')
         }
 
-        self.background = []
+        self.background = ['start_scene']  # add textUI to start scene
         self.scene = 0
 
         # Chang this to switch between scenes
@@ -58,6 +66,8 @@ class Game:
 
         # screen shake
         self.screenshake = 0
+
+        self.selected = 0
 
 
     def load_level(self, map_id):
@@ -75,6 +85,7 @@ class Game:
         self.first_card = 0
 
         self.turned_over = 0
+
 
 
     def run(self):
@@ -97,21 +108,22 @@ class Game:
             # fix the jitter
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
+            
 
             if not self.first_card:
-                self.cards.card_map[[2,2]].turnOver()
+                self.cards.card_map['[2, 2]'].turnOver()
                 self.first_card = 1
 
             # turnover card if selected
             if self.selected:
-                self.cards.card_map[self.mouse].turnOver()
+                self.cards.card_map[[self.mouse]].turnOver()
                 self.turned_over += 1
 
 
             # update cards & flags
             for card in self.cards.card_map.values():
                 card.update()
-                card.render()
+                card.render(self.display)
 
 
             # ouline based on display
@@ -136,7 +148,10 @@ class Game:
                     if event.key == pygame.K_DOWN:
                         self.mouse[0] = min(self.mouse - 1, 3)
                     if event.key == pygame.K_x:
-                        self.select = True
+                        if not self.start:
+                            self.start = 1
+                        else:
+                            self.select = True
                 if event.type == pygame.KEYUP: # when key is released
                     if event.key == pygame.K_x:
                         self.select = False
