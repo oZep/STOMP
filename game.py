@@ -115,11 +115,12 @@ class Game:
                 # fix the jitter
                 render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
-                
 
                 if not self.first_card:
-                    self.cards.card_map['[2, 2]'].turnOver()
-                    self.first_card = 1
+                    card = self.cards.card_map[str([(random.randint(0,2)),random.randint(1,3)])]
+                    if card.value != 1: # only turn it over if not bigfoot
+                        card.turnOver()
+                        self.first_card = 1 
 
                 # turnover card if selected
                 if self.selected:
