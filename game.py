@@ -51,6 +51,7 @@ class Game:
             '8': load_image('cards/8.png'),
             '9': load_image('cards/9.png'),
             #'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
+            'spray': load_image('spray.png'),
             'start_scene': load_image('start.png'),
             'mat_1': load_image('mat_1.png'),
         }
@@ -121,6 +122,8 @@ class Game:
                     if card.value != 1: # only turn it over if not bigfoot
                         card.turnOver()
                         self.first_card = 1 
+
+                ImageUI(self.assets['spray'],[10,70],(50, 108)).render(self.display_2)
 
                 # turnover card if selected
                 if self.selected:
