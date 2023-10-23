@@ -17,7 +17,7 @@ import random
         # [20][21][22][23]   [Pass] [card7]... [card9]
         # ]
 
-OFFSET_X = 50
+OFFSET_X = 80
 OFFSET_Y = -40
 
 CARDS = [1,2,3,4,5,6,7,8,9] # where zero refs bigfoot
@@ -65,5 +65,5 @@ class Card:
         renders card on the screen
         '''
         # show front of card on selected, if card value == 0, also send shocks 
-        surf.blit(self.image, (self.pos[0] * surf.get_width()//4 + offset[0] + OFFSET_X, self.pos[1] * 70  + offset[1] + OFFSET_Y))
+        surf.blit(self.image, (self.pos[0] * surf.get_width()//5 + offset[0] + OFFSET_X, self.pos[1] * 70  + offset[1] + OFFSET_Y))
 
