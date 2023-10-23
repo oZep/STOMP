@@ -18,7 +18,7 @@ class Game:
         # change the window caption
         pygame.display.set_caption("S T O M P")
         # create window
-        self.screen = pygame.display.set_mode((520,520))
+        self.screen = pygame.display.set_mode((780,780))
 
         self.display = pygame.Surface((260, 260), pygame.SRCALPHA) # render on smaller resolution then scale it up to bigger screen
 
@@ -131,7 +131,7 @@ class Game:
                 # update cards & flags
                 for card in self.cards.card_map.values():
                     card.update()
-                    card.render(self.display)
+                    card.render(self.display_2)
 
 
                 # ouline based on display
