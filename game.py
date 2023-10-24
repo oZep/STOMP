@@ -72,7 +72,7 @@ class Game:
         # screen shake
         self.screenshake = 0
 
-        self.selected = 0
+        self.select = 0
         self.start = 0
 
 
@@ -121,22 +121,25 @@ class Game:
 
 
                 if not self.first_card:
-                    card = self.cards.card_map[str([(random.randint(0,2)),random.randint(1,3)])]
+                    card = self.cards.card_map[str([(random.randint(1,2)),random.randint(0,3)])]
                     if card.value != 1: # only turn it over if not bigfoot
                         card.turnOver()
                         self.first_card = 1 
                 
-
+                # turnover card if selected
+                if self.select and self.mouse[1] != 0:
+                    self.cards.card_map[str(self.mouse)].turnOver()
+                    self.turned_over += 1
                 
-                if self.mouse == [2,0]:
-                    ImageUI(self.assets['pass_s'],[22,200],(50, 108)).render(self.display_2)
+                if self.mouse == [1,0]:
+                    ImageUI(self.assets['pass_s'],[24,200],(50, 108)).render(self.display_2)
                     if self.select:
                         pass
                         #call pass function
                 else:
-                    ImageUI(self.assets['pass'],[22,200],(50, 108)).render(self.display_2)
+                    ImageUI(self.assets['pass'],[24,200],(50, 108)).render(self.display_2)
                 
-                if self.mouse == [1,0]:
+                if self.mouse == [2,0]:
                     ImageUI(self.assets['spray_s'],[10,70],(50, 108)).render(self.display_2)
                     if self.select:
                         pass
@@ -144,10 +147,6 @@ class Game:
                 else:
                     ImageUI(self.assets['spray'],[10,70],(50, 108)).render(self.display_2)
 
-                # turnover card if selected
-                if self.selected:
-                    self.cards.card_map[[self.mouse]].turnOver()
-                    self.turned_over += 1
 
 
                 # update cards & flags
@@ -162,6 +161,8 @@ class Game:
                 self.display_2.blit(display_sillhouette, (0, 0))
                 for offset in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
                     self.display_2.blit(display_sillhouette, offset) # putting what we drew onframe back into display
+
+                self.select = False
                 
 
             for event in pygame.event.get():
@@ -170,16 +171,16 @@ class Game:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT: # referencing right and left arrow keys
-                        self.mouse[1] = max(self.mouse[1] - 1, 0)
-                        print(self.mouse)
-                    if event.key == pygame.K_RIGHT: 
-                        self.mouse[1] = min(self.mouse[1] + 1, 3)
-                        print(self.mouse)
-                    if event.key == pygame.K_UP: # jump!, dont care about it's release as I dont want a constant jump on hold
                         self.mouse[0] = max(self.mouse[0] - 1, 0)
                         print(self.mouse)
-                    if event.key == pygame.K_DOWN:
+                    if event.key == pygame.K_RIGHT: 
                         self.mouse[0] = min(self.mouse[0] + 1, 2)
+                        print(self.mouse)
+                    if event.key == pygame.K_UP: # jump!, dont care about it's release as I dont want a constant jump on hold
+                        self.mouse[1] = max(self.mouse[1] - 1, 0)
+                        print(self.mouse)
+                    if event.key == pygame.K_DOWN:
+                        self.mouse[1] = min(self.mouse[1] + 1, 3)
                         print(self.mouse)
                     if event.key == pygame.K_x:
                         if not self.start:
@@ -187,12 +188,8 @@ class Game:
                             self.scene = 1 # start the scene cyle off
                         else:
                             self.select = True
-                            print(self.select)
                     if event.key == pygame.K_ESCAPE:
                         self.start = 0
-                if event.type == pygame.KEYUP: # when key is released
-                    if event.key == pygame.K_x:
-                        self.select = False
 
             # implementing transition
             #if self.transition:
