@@ -47,6 +47,8 @@ class Card:
         self.flag = 0
         self.pos = position
         self.image = self.game.assets['0'].copy()
+        self.orientation = [self.pos[0] * int(self.game.display.get_width()//5) + OFFSET_X, self.pos[1] * 70  + OFFSET_Y]
+        self.setCard = [0,0]
     
     def turnOver(self):
         self.flag = 1
@@ -64,6 +66,15 @@ class Card:
         '''
         renders card on the screen
         '''
+        if self.game.hand_out:
+            while (self.setCard != self.orientation):
+                if self.setCard[0] < self.orientation[0]:
+                    self.setCard[0] += 1
+                if self.setCard[1] < self.orientation[1]:
+                    self.setCard[1] += 1
+                surf.blit(self.image, (self.setCard[0] + offset[0], self.setCard[1] + offset[1]))
+                return
+        
         # show front of card on selected, if card value == 0, also send shocks 
-        surf.blit(self.image, (self.pos[0] * surf.get_width()//5 + offset[0] + OFFSET_X, self.pos[1] * 70  + offset[1] + OFFSET_Y))
+        surf.blit(self.image, (self.orientation[0] + offset[0], self.orientation[1] + offset[1]))
 

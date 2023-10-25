@@ -96,6 +96,7 @@ class Game:
 
         self.turned_over = 0
 
+        self.hand_out = 0
 
 
     def run(self):
@@ -125,9 +126,12 @@ class Game:
 
 
                 if not self.first_card:
-                    card = self.cards.card_map[str([(random.randint(1,2)),random.randint(1,3)])]
+                    x = random.randint(1,2)
+                    y = random.randint(1,3)
+                    card = self.cards.card_map[str([x,y])]
                     if card.value != 1: # only turn it over if not bigfoot
                         card.turnOver()
+                        self.mouse = [x,y]
                         self.first_card = 1 
 
                 
@@ -152,10 +156,15 @@ class Game:
                     if self.select:
                         pass
                         #call spray function
+                        while (self.x_select and not self.exist):
+                            if self.mouse[0] != 0: # show select
+                                self.display.blit(self.assets['mouse'], (self.mouse[0] * int(self.display_2.get_width()//5) + OFFSET_X, self.mouse[1] * 70  + OFFSET_Y))
+                    
+                        #check if card is not turnober
                 else:
                     ImageUI(self.assets['spray'],[10,70],(50, 108)).render(self.display_2)
 
-
+                self.hand_out = 1
 
                 # update cards & flags
                 for card in self.cards.card_map.values():
