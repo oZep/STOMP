@@ -48,7 +48,7 @@ class Card:
         self.pos = position
         self.image = self.game.assets['0'].copy()
         self.orientation = [self.pos[0] * int(self.game.display.get_width()//5) + OFFSET_X, self.pos[1] * 70  + OFFSET_Y]
-        self.setCard = [0,0]
+        self.setCard = [120, -20]
     
     def turnOver(self):
         self.flag = 1
@@ -69,9 +69,13 @@ class Card:
         if self.game.hand_out:
             while (self.setCard != self.orientation):
                 if self.setCard[0] < self.orientation[0]:
-                    self.setCard[0] += 1
+                    self.setCard[0] += 3
+                if self.setCard[0] > self.orientation[0]:
+                    self.setCard[0] -= 3
                 if self.setCard[1] < self.orientation[1]:
-                    self.setCard[1] += 1
+                    self.setCard[1] += 4
+                if self.setCard[1] > self.orientation[1]:
+                    self.setCard[1] -= 1
                 surf.blit(self.image, (self.setCard[0] + offset[0], self.setCard[1] + offset[1]))
                 return
         
