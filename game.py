@@ -8,6 +8,9 @@ from scripts.utils import load_image, load_images, Animation
 from scripts.UI import TextUI, ImageUI
 from scripts.card import Cards, Card
 
+OFFSET_X = 45
+OFFSET_Y = 10
+
 class Game:
     def __init__(self):
         '''
@@ -29,7 +32,7 @@ class Game:
 
         # keeping track of cards
 
-        self.mouse = [1,3]
+        self.mouse = [2,3]
 
         self.score = 0 # for cards turned over add the amount
 
@@ -55,6 +58,7 @@ class Game:
             'pass': load_image('pass.png'),
             'pass_s': load_image('pass_select.png'),
             'spray_s': load_image('spray_s.png'),
+            'mouse': load_image('mouse.png'),
             'start_scene': load_image('start.png'),
             'mat_1': load_image('mat_1.png'),
         }
@@ -121,17 +125,21 @@ class Game:
 
 
                 if not self.first_card:
-                    card = self.cards.card_map[str([(random.randint(1,2)),random.randint(0,3)])]
+                    card = self.cards.card_map[str([(random.randint(1,2)),random.randint(1,3)])]
                     if card.value != 1: # only turn it over if not bigfoot
                         card.turnOver()
                         self.first_card = 1 
+
                 
                 # turnover card if selected
-                if self.select and self.mouse[1] != 0:
+                if self.select and self.mouse[0] != 0:
                     self.cards.card_map[str(self.mouse)].turnOver()
                     self.turned_over += 1
+
                 
-                if self.mouse == [1,0]:
+                if self.mouse == [0,1]: # score 
+                    pass 
+                if self.mouse == [0,3]:
                     ImageUI(self.assets['pass_s'],[24,200],(50, 108)).render(self.display_2)
                     if self.select:
                         pass
@@ -139,7 +147,7 @@ class Game:
                 else:
                     ImageUI(self.assets['pass'],[24,200],(50, 108)).render(self.display_2)
                 
-                if self.mouse == [2,0]:
+                if self.mouse == [0,2]:
                     ImageUI(self.assets['spray_s'],[10,70],(50, 108)).render(self.display_2)
                     if self.select:
                         pass
@@ -154,13 +162,17 @@ class Game:
                     card.update()
                     card.render(self.display)
 
-
                 # ouline based on display
                 display_mask = pygame.mask.from_surface(self.display)
                 display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) # 180 opaque, 0 transparen
                 self.display_2.blit(display_sillhouette, (0, 0))
                 for offset in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
                     self.display_2.blit(display_sillhouette, offset) # putting what we drew onframe back into display
+
+                
+                if self.mouse[0] != 0: # show select
+                    self.display.blit(self.assets['mouse'], (self.mouse[0] * self.display_2.get_width()//5 + OFFSET_X, self.mouse[1] * 70  + OFFSET_Y))
+
 
                 self.select = False
                 
@@ -172,16 +184,12 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT: # referencing right and left arrow keys
                         self.mouse[0] = max(self.mouse[0] - 1, 0)
-                        print(self.mouse)
                     if event.key == pygame.K_RIGHT: 
-                        self.mouse[0] = min(self.mouse[0] + 1, 2)
-                        print(self.mouse)
+                        self.mouse[0] = min(self.mouse[0] + 1, 3)
                     if event.key == pygame.K_UP: # jump!, dont care about it's release as I dont want a constant jump on hold
-                        self.mouse[1] = max(self.mouse[1] - 1, 0)
-                        print(self.mouse)
+                        self.mouse[1] = max(self.mouse[1] - 1, 1)
                     if event.key == pygame.K_DOWN:
                         self.mouse[1] = min(self.mouse[1] + 1, 3)
-                        print(self.mouse)
                     if event.key == pygame.K_x:
                         if not self.start:
                             self.start = 1

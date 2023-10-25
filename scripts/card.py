@@ -17,12 +17,12 @@ import random
         # [20][21][22][23]   [Pass] [card7]... [card9]
         # ]
 
-OFFSET_X = 80
+OFFSET_X = 20
 OFFSET_Y = -40
 
 CARDS = [1,2,3,4,5,6,7,8,9] # where zero refs bigfoot
 CARD_MAP = {
-            '1': [0,1], '2': [0,2], '3': [0,3],   #[XX] [card1]... [card3]
+            '1': [3,1], '2': [3,2], '3': [3,3],   #[XX] [card1]... [card3]
             '4': [1,1], '5': [1,2], '6': [1,3],    #[Spray] [card4]... [card6]
             '7': [2,1], '8': [2,2], '9': [2,3],    #[Pass] [card7]... [card9]
         }
