@@ -156,7 +156,7 @@ class Game:
                     if self.select:
                         pass
                         #call spray function
-                        while (self.x_select and not self.exist):
+                        while (self.select and not self.exist):
                             if self.mouse[0] != 0: # show select
                                 self.display.blit(self.assets['mouse'], (self.mouse[0] * int(self.display_2.get_width()//5) + OFFSET_X, self.mouse[1] * 70  + OFFSET_Y))
                     

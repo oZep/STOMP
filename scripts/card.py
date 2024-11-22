@@ -1,6 +1,7 @@
 
 import pygame
 import random
+import copy
 
 # for the UI have 1 version in the beginning generated 3 times
 
@@ -32,12 +33,15 @@ class Cards:
         self.game = game
         self.card_map = {}
         self.unselected = list(CARDS)
-        
+
+        self.i = copy.deepcopy(list(CARD_MAP.values()))
         # generate cards for games
-        for i in CARD_MAP.values():
-            select = random.randint(0,len(self.unselected)-1)
-            self.card_map[str(i)] = Card(CARDS[select], self.game, i)
-            self.unselected.pop(select)
+        while len(self.unselected) != 0: # while there are still cards to be selected
+            select = random.randint(0,len(self.unselected)-1) # select a random card
+            value = self.unselected[select] # select a random value from the list of unselected
+            self.card_map[str(self.i[0])] = Card(CARDS[value-1], self.game, self.i[0]) # create a card object
+            self.unselected.pop(select) # remove the card from the list
+            self.i.pop(0) # remove the card from the position list
         
 
 class Card:
